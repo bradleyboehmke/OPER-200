@@ -1,0 +1,39 @@
+---
+title: "R Notebook"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+## Introduction
+
+The famous (Fisher's or Anderson's) `iris` data set contains `r nrow(iris)` observations of iris flowers and includes the following variables:
+
+- sepal length
+- sepal width
+- petal length
+- petal width
+- species
+
+
+## Descriptive Statistics
+The average sepal length, sepal width, petal length, and petal width across all observations are **`r round(apply(iris[, 1:4], MARGIN = 2, mean), 1)`** respectively. Additional descriptive statistics are detailed below:
+
+```{r}
+library(printr)
+
+summary(iris)
+```
+
+
+
+## Illustration
+
+The following graphic illustrates the relationship between sepal length and petal length categorized by Iris species.
+
+```{r, fig.align='center'}
+library(ggplot2)
+
+ggplot(iris, aes(Sepal.Length, Petal.Length, color = Species)) +
+        geom_point()
+```

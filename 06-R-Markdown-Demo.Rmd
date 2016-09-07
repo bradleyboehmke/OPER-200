@@ -1,0 +1,136 @@
+---
+title: "R Markdown Demo"
+author: "Brad Boehmke"
+date: "2016-08-15"
+output: html_document
+---
+
+## YAML Header
+First off, the above header information is known as [YAML](http://www.yaml.org). There are several YAML options to enhance your reports.
+
+You can include hyperlinks:
+
+```{r, eval=FALSE}
+author: "[Brad Boehmke](http://bradleyboehmke.github.io)"
+```
+
+R code:
+
+```{r, eval=FALSE}
+date: "`r Sys.Date()`"
+```
+
+table of contents:
+
+```{r, eval=FALSE}
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+```
+
+and keep the raw markdown (`.md`) file produced:
+
+```{r, eval=FALSE}
+output: 
+  html_document:
+    keep_md: true
+```
+
+There are many YAML options which you can read more about at:
+
+- HTML reports: http://rmarkdown.rstudio.com/html_document_format.html
+- PDF (LaTex) reports: http://rmarkdown.rstudio.com/pdf_document_format.html
+
+## Code Chunks
+The key thing for us to focus on are the **code chunks**.  Code chunks start with the following line: ` ```{r chunk_name} ` and end with ` ``` `
+
+```{r simulate_data}
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+```
+
+Including a name for the code chunk is optional; however, it makes it easier to identify where errors are located. If a code chunk produces a figure the code chunk name will be used to name the figures.
+
+Code chunks are evaluated in order and variables from one code chunk can be used code chunks that follow.
+
+
+### Code Chunk Options
+There are *many* options that can be included in code chunks. You can find many of them discussed at http://yihui.name/knitr/options/. The following are basic ones you will use often:
+
+1. `echo=FALSE` hides the code but displays results:
+```{r echo=FALSE}
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+
+cor(x, y)
+```
+
+2. `results='hide'` hides the results but shows the code
+```{r results='hide'}
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+
+cor(x, y)
+```
+
+3. `eval=FALSE` displays the code but does not evaluate it
+```{r eval=FALSE}
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+
+cor(x, y)
+```
+
+4. `include=FALSE` evaluates the code but does not display code *or* output
+```{r include=FALSE}
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+
+cor(x, y)
+```
+
+5. `warning=FALSE` and `message=FALSE` are useful for suppressing any messages produced when loading packages
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+```
+
+6. `collapse=TRUE` will collapse your output to be contained within the code chunk
+```{r, collapse=TRUE}
+head(iris)
+```
+
+
+7. `fig...` options are available to align and size figure outputs
+```{r, fig.align='center', fig.height=3, fig.width=4}
+library(ggplot2)
+
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+        geom_point()
+```
+
+### In-line Code
+A key motivation for reproducible research is to link any results reported directly to the data and functions used to create them. Consequently, you should never manual insert numbers such as "The average miles per gallon is 20.1."  Rather, insert a bit of code that evaluates and automatically reports this. This will like:  "The average miles per gallon is **`r mean(mtcars$mpg)`**."  Now if the underlying data changes you do not need to remember all the inline values you manually entered.
+
+You may not like the fact that the output is reporting all the decimals. You could include the `round` function in the inline code: **`r round(mean(mtcars$mpg), 1)`**
+
+
+### Dealing with Tables
+By default, the table outputs produced in R Markdown will look like the output you would see in your console:
+```{r}
+head(iris)
+```
+
+The simplest approach to print nice looking tables is to use the `printr` package:
+
+```{r}
+library(printr)
+
+head(iris)
+```
+
+To include captions:
+
+```{r}
+knitr::kable(head(iris), caption = 'Example caption for the iris data frame')
+```
